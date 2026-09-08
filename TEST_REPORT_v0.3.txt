@@ -1,0 +1,25 @@
+SPK WINDOWS NATIVE v0.3.0 — TEST REPORT
+========================================
+
+Static validation performed in build environment:
+
+[PASS] 18 XAML files parse as valid XML.
+[PASS] New C# files have balanced braces.
+[PASS] SQLite migration creates all five case-module tables:
+       case_profiles
+       guardian_contacts
+       home_visits
+       counselling_sessions
+       interventions
+[PASS] All 10 new SELECT/INSERT-UPDATE SQL statements prepare successfully against the SQLite schema.
+[PASS] MainWindow routing points cases/contacts/visits/counselling/interventions to real WinUI pages.
+[PASS] v0.2.1 PerMonitorV2 CrispUI settings retained.
+[PASS] SyncTables already includes all five case module tables.
+
+Windows verification still required:
+1. Extract to C:\SPK030
+2. Open SPK_Windows.sln
+3. Debug | x64
+4. Rebuild Solution
+5. F5
+6. Test CRUD in all five modules.

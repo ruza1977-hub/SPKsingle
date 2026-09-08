@@ -1,0 +1,29 @@
+<Page x:Class="SistemPengurusanKehadiran.Pages.AttendancePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" RequestedTheme="Light" Background="#F8FAFD" UseLayoutRounding="True">
+    <Grid Padding="28" RowSpacing="14">
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition/></Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Spacing="14"><Border Width="60" Height="60" CornerRadius="18" Background="{StaticResource MintBrush}"><FontIcon Glyph="&#xE73E;" Foreground="White" FontSize="27" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border><StackPanel VerticalAlignment="Center"><TextBlock Text="Kehadiran" Style="{StaticResource PageTitleStyle}"/><TextBlock Text="Hari cuti dikunci • pilih kelas • murid baharu terus ditanda HADIR" Foreground="{StaticResource TextSecondaryBrush}"/></StackPanel></StackPanel>
+
+        <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}">
+            <Grid ColumnSpacing="14"><Grid.ColumnDefinitions><ColumnDefinition Width="220"/><ColumnDefinition Width="300"/><ColumnDefinition/><ColumnDefinition Width="210"/></Grid.ColumnDefinitions><CalendarDatePicker x:Name="Tarikh" Header="Tarikh" DateChanged="Selection_Changed"/><ComboBox x:Name="Kelas" Grid.Column="1" Header="Kelas" SelectionChanged="Selection_Changed"/><TextBlock x:Name="Status" Grid.Column="2" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/><Button Grid.Column="3" Content="Simpan / Kemas Kini" Style="{StaticResource SuccessButtonStyle}" VerticalAlignment="Bottom" Click="Save_Click"/></Grid>
+        </Border>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10">
+            <Border Background="#EAF2FE" CornerRadius="14" Padding="14,7"><TextBlock x:Name="StudentCount" Text="0 MURID" Foreground="{StaticResource BlueBrush}" FontWeight="Bold"/></Border>
+            <Border Background="#ECF8F4" CornerRadius="14" Padding="14,7"><TextBlock x:Name="PresentCount" Text="HADIR 0" Foreground="{StaticResource MintBrush}" FontWeight="Bold"/></Border>
+            <Border Background="#FDECEE" CornerRadius="14" Padding="14,7"><TextBlock x:Name="AbsentCount" Text="TIDAK HADIR 0" Foreground="{StaticResource CoralBrush}" FontWeight="Bold"/></Border>
+        </StackPanel>
+
+        <Border Grid.Row="3" Style="{StaticResource CardBorderStyle}" Padding="0">
+            <Grid>
+                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/></Grid.RowDefinitions>
+                <Grid Background="#F2F6FC" Padding="15,10" ColumnSpacing="8"><Grid.ColumnDefinitions><ColumnDefinition Width="255"/><ColumnDefinition Width="145"/><ColumnDefinition Width="150"/><ColumnDefinition Width="135"/><ColumnDefinition Width="190"/><ColumnDefinition Width="190"/></Grid.ColumnDefinitions><TextBlock Text="MURID" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/><TextBlock Grid.Column="1" Text="KELAS" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/><TextBlock Grid.Column="2" Text="STATUS" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/><TextBlock Grid.Column="3" Text="KATEGORI" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/><TextBlock Grid.Column="4" Text="SEBAB" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/><TextBlock Grid.Column="5" Text="CATATAN" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/></Grid>
+                <ListView x:Name="List" Grid.Row="1">
+                    <ListView.ItemTemplate><DataTemplate><Grid Padding="11,7" ColumnSpacing="8"><Grid.ColumnDefinitions><ColumnDefinition Width="255"/><ColumnDefinition Width="145"/><ColumnDefinition Width="150"/><ColumnDefinition Width="135"/><ColumnDefinition Width="190"/><ColumnDefinition Width="190"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="{Binding Nama}" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis"/><TextBlock Text="{Binding NoMurid}" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/></StackPanel><TextBlock Grid.Column="1" Text="{Binding Kelas}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/><ComboBox Grid.Column="2" SelectedValue="{Binding Status, Mode=TwoWay}" SelectedValuePath="Content"><ComboBoxItem Content="HADIR"/><ComboBoxItem Content="TIDAK HADIR"/><ComboBoxItem Content="PONTENG"/><ComboBoxItem Content="MC"/><ComboBoxItem Content="CUTI BERSEBAB"/><ComboBoxItem Content="LEWAT"/></ComboBox><TextBox Grid.Column="3" Text="{Binding Kategori,Mode=TwoWay}"/><TextBox Grid.Column="4" Text="{Binding Sebab,Mode=TwoWay}"/><TextBox Grid.Column="5" Text="{Binding Catatan,Mode=TwoWay}"/></Grid></DataTemplate></ListView.ItemTemplate>
+                </ListView>
+                <StackPanel x:Name="Empty" Grid.RowSpan="2" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12"><FontIcon Glyph="&#xE787;" FontSize="48" Foreground="{StaticResource CoralBrush}"/><TextBlock x:Name="EmptyTitle" Text="Pilih tarikh dan kelas" FontSize="22" FontWeight="SemiBold" Foreground="{StaticResource NavyBrush}"/><TextBlock x:Name="EmptyMessage" Text="" Foreground="{StaticResource TextSecondaryBrush}" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="620"/></StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

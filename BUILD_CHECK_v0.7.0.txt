@@ -1,0 +1,18 @@
+v0.7.0 STATIC BUILD CHECK
+- XAML files: 22
+- XAML/XML parse errors: 0
+- Missing XAML event handlers detected: 0
+- WrapPanel controls: 0
+- <Color> resource declarations: 0
+- C# files: 44
+- C# brace/string balance issues: 0
+- Pattern "??= throw": 0
+- Canonical database name retained: database/sistem_pengurusan_kehadiran.sqlite3
+- Sync tables retained: schools, students, teachers, calendar_days, attendance, case_profiles,
+  guardian_contacts, home_visits, counselling_sessions, interventions, warning_letters,
+  evidence_files, video_evidence
+- New AutoSyncService included
+- Restore Maintenance Mode stops/restarts Auto Sync
+- dotnet/Windows SDK build: NOT executable in this Linux build environment
+
+FINAL REQUIRED TEST: Visual Studio Windows -> Clean Solution -> Rebuild Solution.

@@ -1,0 +1,335 @@
+<Page
+    x:Class="SistemPengurusanKehadiran.Pages.ReportsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    RequestedTheme="Light"
+    Background="#F8FAFD"
+    UseLayoutRounding="True">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Padding="20" Spacing="16">
+
+            <!-- Header: ikut hierarki visual versi Mac -->
+            <Grid ColumnSpacing="14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="64"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Width="56" Height="56" CornerRadius="16" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#2F80ED" Offset="0"/>
+                            <GradientStop Color="#2DBE9B" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <FontIcon Glyph="&#xE9D2;" FontFamily="Segoe Fluent Icons" FontSize="27" Foreground="White"/>
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Text="Laporan &amp; Analitik" FontSize="25" FontWeight="Bold" Foreground="{StaticResource NavyBrush}"/>
+                    <TextBlock Text="Pusat laporan sekolah · analitik · eksport Word, PDF dan CSV" FontSize="13" Foreground="#73777F"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Filter -->
+            <Border Style="{StaticResource CardBorderStyle}" Padding="16,12">
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="105"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="185"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="210"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Tahun" VerticalAlignment="Center" FontSize="15" Margin="4,0"/>
+                    <ComboBox x:Name="YearBox" Grid.Column="1" SelectionChanged="Filter_Changed"/>
+                    <TextBlock Grid.Column="2" Text="Tempoh" VerticalAlignment="Center" FontSize="15" Margin="10,0,0,0"/>
+                    <ComboBox x:Name="PeriodBox" Grid.Column="3" SelectionChanged="Filter_Changed">
+                        <x:String>SEPANJANG TAHUN</x:String>
+                        <x:String>BULAN SEMASA</x:String>
+                        <x:String>JAN - JUN</x:String>
+                        <x:String>JUL - DIS</x:String>
+                    </ComboBox>
+                    <TextBlock Grid.Column="4" Text="Kelas" VerticalAlignment="Center" FontSize="15" Margin="10,0,0,0"/>
+                    <ComboBox x:Name="ClassBox" Grid.Column="5" SelectionChanged="Filter_Changed"/>
+
+                    <Button Grid.Column="7" Click="Refresh_Click" Padding="14,9" CornerRadius="8" Background="#EEF1F5" Foreground="#30343B" BorderThickness="0">
+                        <StackPanel Orientation="Horizontal" Spacing="7">
+                            <FontIcon Glyph="&#xE72C;" FontFamily="Segoe Fluent Icons" FontSize="14"/>
+                            <TextBlock Text="Segar Semula" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Column="8" Click="ExportCsv_Click" Style="{StaticResource SuccessButtonStyle}" Padding="14,9">
+                        <StackPanel Orientation="Horizontal" Spacing="7">
+                            <FontIcon Glyph="&#xE8A5;" FontFamily="Segoe Fluent Icons" FontSize="14"/>
+                            <TextBlock Text="Eksport CSV"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Column="9" Click="ExportPdf_Click" Style="{StaticResource PrimaryButtonStyle}" Padding="14,9">
+                        <StackPanel Orientation="Horizontal" Spacing="7">
+                            <FontIcon Glyph="&#xEA90;" FontFamily="Segoe Fluent Icons" FontSize="14"/>
+                            <TextBlock Text="Eksport PDF"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- Pusat Jana Laporan v1.1 -->
+            <Border Style="{StaticResource CardBorderStyle}" Padding="18,16">
+                <Grid ColumnSpacing="14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="230"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Jenis Laporan" FontSize="13" FontWeight="SemiBold" Foreground="#6B7280"/>
+                        <ComboBox x:Name="ReportTypeBox" MinWidth="220" SelectionChanged="ReportType_Changed"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="3">
+                        <TextBlock Text="Pusat Jana Laporan" FontSize="17" FontWeight="Bold" Foreground="{StaticResource NavyBrush}"/>
+                        <TextBlock x:Name="ReportDescriptionText" Text="Pilih jenis laporan untuk dijana." FontSize="12" Foreground="#73777F" TextWrapping="Wrap"/>
+                        <TextBlock Text="Penapis Tahun · Tempoh · Kelas di atas digunakan untuk laporan." FontSize="11" Foreground="#8B9199"/>
+                    </StackPanel>
+                    <Button Grid.Column="2" Click="ExportWordReport_Click" Style="{StaticResource SuccessButtonStyle}" Padding="16,10" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Spacing="7">
+                            <FontIcon Glyph="&#xE8A5;" FontFamily="Segoe Fluent Icons" FontSize="15"/>
+                            <TextBlock Text="Jana Word" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Column="3" Click="ExportSelectedPdf_Click" Style="{StaticResource PrimaryButtonStyle}" Padding="16,10" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Spacing="7">
+                            <FontIcon Glyph="&#xEA90;" FontFamily="Segoe Fluent Icons" FontSize="15"/>
+                            <TextBlock Text="Jana PDF" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- KPI -->
+            <Grid ColumnSpacing="14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource CardBorderStyle}" Padding="16,14">
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="48"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Border Width="44" Height="44" CornerRadius="12" Background="#E8F7F2">
+                            <FontIcon Glyph="&#xE73E;" FontFamily="Segoe Fluent Icons" FontSize="18" Foreground="#2DBE9B"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+                            <TextBlock Text="Kadar Hadir" FontSize="12" FontWeight="SemiBold" Foreground="#7A7E85"/>
+                            <TextBlock x:Name="RateValue" Text="0.0%" FontSize="22" FontWeight="Bold" Foreground="{StaticResource NavyBrush}"/>
+                            <TextBlock Text="hadir + lewat / rekod" FontSize="11" Foreground="#7A7E85"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Padding="16,14">
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="48"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Border Width="44" Height="44" CornerRadius="12" Background="#FFE9EC">
+                            <FontIcon Glyph="&#xE814;" FontFamily="Segoe Fluent Icons" FontSize="18" Foreground="#F35D65"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+                            <TextBlock Text="Tidak Hadir" FontSize="12" FontWeight="SemiBold" Foreground="#7A7E85"/>
+                            <TextBlock x:Name="AbsentValue" Text="0" FontSize="22" FontWeight="Bold" Foreground="{StaticResource NavyBrush}"/>
+                            <TextBlock Text="TH + ponteng + MC + cuti" FontSize="11" Foreground="#7A7E85" TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}" Padding="16,14">
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="48"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Border Width="44" Height="44" CornerRadius="12" Background="#FFF3DF">
+                            <FontIcon Glyph="&#xE7BA;" FontFamily="Segoe Fluent Icons" FontSize="18" Foreground="#F5A623"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+                            <TextBlock Text="Ponteng" FontSize="12" FontWeight="SemiBold" Foreground="#7A7E85"/>
+                            <TextBlock x:Name="PontengValue" Text="0" FontSize="22" FontWeight="Bold" Foreground="{StaticResource NavyBrush}"/>
+                            <TextBlock Text="rekod ponteng" FontSize="11" Foreground="#7A7E85"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="3" Style="{StaticResource CardBorderStyle}" Padding="16,14">
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="48"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Border Width="44" Height="44" CornerRadius="12" Background="#EEEAFE">
+                            <FontIcon Glyph="&#xE8F9;" FontFamily="Segoe Fluent Icons" FontSize="18" Foreground="#7656D8"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+                            <TextBlock Text="Kes Aktif" FontSize="12" FontWeight="SemiBold" Foreground="#7A7E85"/>
+                            <TextBlock x:Name="ActiveCaseValue" Text="0" FontSize="22" FontWeight="Bold" Foreground="{StaticResource NavyBrush}"/>
+                            <TextBlock Text="aktif / pemantauan" FontSize="11" Foreground="#7A7E85"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="4" Style="{StaticResource CardBorderStyle}" Padding="16,14">
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="48"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Border Width="44" Height="44" CornerRadius="12" Background="#E8F7F2">
+                            <FontIcon Glyph="&#xEB51;" FontFamily="Segoe Fluent Icons" FontSize="18" Foreground="#2DBE9B"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+                            <TextBlock Text="Dipulihkan" FontSize="12" FontWeight="SemiBold" Foreground="#7A7E85"/>
+                            <TextBlock x:Name="RecoveredValue" Text="0" FontSize="22" FontWeight="Bold" Foreground="{StaticResource NavyBrush}"/>
+                            <TextBlock Text="kes selesai" FontSize="11" Foreground="#7A7E85"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Trend & prestasi kelas -->
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.08*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource CardBorderStyle}" MinHeight="360" Padding="20">
+                    <StackPanel Spacing="14">
+                        <Grid>
+                            <TextBlock Text="Trend Kehadiran" FontSize="17" FontWeight="Bold" Foreground="{StaticResource NavyBrush}"/>
+                            <TextBlock Text="% hadir" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="12" Foreground="#7A7E85"/>
+                        </Grid>
+                        <ItemsControl x:Name="TrendList">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Padding="0,8" ColumnSpacing="14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="76"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="70"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding MonthLabel}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        <ProgressBar Grid.Column="1" Value="{Binding AttendanceRate}" Minimum="0" Maximum="100" Height="12" VerticalAlignment="Center" Foreground="#62C2A5" Background="#EDF2F5"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding AttendanceRateText}" HorizontalAlignment="Right" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock x:Name="TrendEmpty" Text="Tiada rekod kehadiran untuk tempoh ini." HorizontalAlignment="Center" Margin="0,80,0,0" Foreground="#8A8E95" Visibility="Collapsed"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" MinHeight="360" Padding="20">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Prestasi Mengikut Kelas" FontSize="17" FontWeight="Bold" Foreground="{StaticResource NavyBrush}"/>
+                        <Border BorderBrush="#E4E7EB" BorderThickness="0,0,0,1" Padding="0,4,0,8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="92"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Kelas" FontSize="12" Foreground="#7A7E85"/>
+                                <TextBlock Grid.Column="1" Text="Tidak" FontSize="12" Foreground="#7A7E85" HorizontalAlignment="Right"/>
+                                <TextBlock Grid.Column="2" Text="Ponteng" FontSize="12" Foreground="#7A7E85" HorizontalAlignment="Right"/>
+                                <TextBlock Grid.Column="3" Text="Hadir" FontSize="12" Foreground="#7A7E85" HorizontalAlignment="Right"/>
+                            </Grid>
+                        </Border>
+                        <ItemsControl x:Name="ClassPerformanceList">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#E6E8EC" BorderThickness="0,0,0,1" Padding="0,8">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="80"/>
+                                                <ColumnDefinition Width="80"/>
+                                                <ColumnDefinition Width="92"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Kelas}" FontSize="12.5" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding TidakHadir}" FontSize="12.5" HorizontalAlignment="Right"/>
+                                            <TextBlock Grid.Column="2" Text="{Binding Ponteng}" FontSize="12.5" HorizontalAlignment="Right"/>
+                                            <TextBlock Grid.Column="3" Text="{Binding AttendanceRateText}" FontSize="12.5" HorizontalAlignment="Right"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Murid berisiko -->
+            <Border Style="{StaticResource CardBorderStyle}" Padding="20" MinHeight="300">
+                <StackPanel Spacing="12">
+                    <Grid>
+                        <TextBlock Text="Murid Berisiko" FontSize="17" FontWeight="Bold" Foreground="{StaticResource NavyBrush}"/>
+                        <TextBlock Text="Disusun mengikut skor risiko ketidakhadiran" HorizontalAlignment="Right" FontSize="12" Foreground="#7A7E85"/>
+                    </Grid>
+                    <Border BorderBrush="#E4E7EB" BorderThickness="0,0,0,1" Padding="10,5,10,9">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2.6*"/>
+                                <ColumnDefinition Width="1.35*"/>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="75"/>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="110"/>
+                                <ColumnDefinition Width="90"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Murid" FontSize="12" Foreground="#7A7E85"/>
+                            <TextBlock Grid.Column="1" Text="Kelas" FontSize="12" Foreground="#7A7E85"/>
+                            <TextBlock Grid.Column="2" Text="TH" FontSize="12" Foreground="#7A7E85" HorizontalAlignment="Right"/>
+                            <TextBlock Grid.Column="3" Text="Ponteng" FontSize="12" Foreground="#7A7E85" HorizontalAlignment="Right"/>
+                            <TextBlock Grid.Column="4" Text="Lewat" FontSize="12" Foreground="#7A7E85" HorizontalAlignment="Right"/>
+                            <TextBlock Grid.Column="5" Text="% Hadir" FontSize="12" Foreground="#7A7E85" HorizontalAlignment="Right"/>
+                            <TextBlock Grid.Column="6" Text="Risiko" FontSize="12" Foreground="#7A7E85" HorizontalAlignment="Center"/>
+                            <TextBlock Grid.Column="7" Text="Kes" FontSize="12" Foreground="#7A7E85" HorizontalAlignment="Right"/>
+                        </Grid>
+                    </Border>
+                    <ItemsControl x:Name="RiskList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="#ECEEF1" BorderThickness="0,0,0,1" Padding="10,9">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2.6*"/>
+                                            <ColumnDefinition Width="1.35*"/>
+                                            <ColumnDefinition Width="70"/>
+                                            <ColumnDefinition Width="75"/>
+                                            <ColumnDefinition Width="70"/>
+                                            <ColumnDefinition Width="90"/>
+                                            <ColumnDefinition Width="110"/>
+                                            <ColumnDefinition Width="90"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Nama}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Kelas}" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding TidakHadir}" HorizontalAlignment="Right"/>
+                                        <TextBlock Grid.Column="3" Text="{Binding Ponteng}" HorizontalAlignment="Right" Foreground="{StaticResource CoralBrush}" FontWeight="SemiBold"/>
+                                        <TextBlock Grid.Column="4" Text="{Binding Lewat}" HorizontalAlignment="Right"/>
+                                        <TextBlock Grid.Column="5" Text="{Binding AttendanceRateText}" HorizontalAlignment="Right"/>
+                                        <Border Grid.Column="6" Background="#FFF4DC" CornerRadius="10" Padding="8,3" HorizontalAlignment="Center">
+                                            <TextBlock Text="{Binding RiskText}" FontSize="11" FontWeight="SemiBold" Foreground="#A46B0A"/>
+                                        </Border>
+                                        <TextBlock Grid.Column="7" Text="{Binding CaseText}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TextBlock x:Name="RiskEmpty" Text="Tiada rekod murid untuk tempoh ini." HorizontalAlignment="Center" Margin="0,70,0,50" Foreground="#8A8E95" Visibility="Collapsed"/>
+                </StackPanel>
+            </Border>
+
+            <TextBlock x:Name="StatusText" Text="" Foreground="#5F6670" FontSize="12" Margin="4,0,0,10"/>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

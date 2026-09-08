@@ -1,0 +1,122 @@
+<Page x:Class="SistemPengurusanKehadiran.Pages.RecoveryPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="#F8FAFD" RequestedTheme="Light" UseLayoutRounding="True">
+    <Grid Padding="28" RowSpacing="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <StackPanel Orientation="Horizontal" Spacing="14">
+                <Border Width="58" Height="58" CornerRadius="17" Background="{StaticResource MintBrush}">
+                    <FontIcon Glyph="&#xEB52;" Foreground="White" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Dipulihkan" Style="{StaticResource PageTitleStyle}"/>
+                    <TextBlock Text="Rekod pemulihan murid • hasil intervensi • tempoh pemantauan" Foreground="{StaticResource TextSecondaryBrush}"/>
+                </StackPanel>
+            </StackPanel>
+            <Border HorizontalAlignment="Right" Background="#E7F8F3" CornerRadius="14" Padding="15,8">
+                <TextBlock x:Name="RecoveredCount" Text="0 DIPULIHKAN" Foreground="{StaticResource MintBrush}" FontWeight="Bold"/>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="1" ColumnSpacing="12">
+            <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+            <Border Style="{StaticResource CardBorderStyle}" Padding="16">
+                <StackPanel><TextBlock Text="Kes Aktif" Foreground="{StaticResource TextSecondaryBrush}"/><TextBlock x:Name="ActiveText" Text="0" FontSize="30" FontWeight="Bold" Foreground="{StaticResource CoralBrush}"/></StackPanel>
+            </Border>
+            <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Padding="16">
+                <StackPanel><TextBlock Text="Pemantauan" Foreground="{StaticResource TextSecondaryBrush}"/><TextBlock x:Name="MonitoringText" Text="0" FontSize="30" FontWeight="Bold" Foreground="{StaticResource AmberBrush}"/></StackPanel>
+            </Border>
+            <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}" Padding="16">
+                <StackPanel><TextBlock Text="Dipulihkan" Foreground="{StaticResource TextSecondaryBrush}"/><TextBlock x:Name="RecoveredText" Text="0" FontSize="30" FontWeight="Bold" Foreground="{StaticResource MintBrush}"/></StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="2" ColumnSpacing="18">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="560"/></Grid.ColumnDefinitions>
+
+            <StackPanel Spacing="12">
+                <Grid ColumnSpacing="10">
+                    <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="190"/></Grid.ColumnDefinitions>
+                    <ComboBox Style="{StaticResource CaseComboBoxStyle}" x:Name="StudentSearch"
+                              DisplayMemberPath="Display" PlaceholderText="Pilih nama murid"
+                              SelectionChanged="StudentSearch_SelectionChanged"/>
+                    <ComboBox Grid.Column="1" Style="{StaticResource CaseComboBoxStyle}" x:Name="Filter" SelectionChanged="Filter_SelectionChanged"/>
+                </Grid>
+                <Border Style="{StaticResource CardBorderStyle}" Padding="0">
+                    <Grid>
+                        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/></Grid.RowDefinitions>
+                        <Grid Background="#F2F6FC" Padding="16,11" ColumnSpacing="10">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="140"/><ColumnDefinition Width="120"/><ColumnDefinition Width="120"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="MURID / KELAS" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Grid.Column="1" Text="KATEGORI" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Grid.Column="2" Text="STATUS" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Grid.Column="3" Text="DIPULIHKAN" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        </Grid>
+                        <ListView x:Name="List" Grid.Row="1" SelectionChanged="List_SelectionChanged">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Padding="12,10" ColumnSpacing="10">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="140"/><ColumnDefinition Width="120"/><ColumnDefinition Width="120"/></Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding StudentName}" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                            <TextBlock Text="{Binding Kelas}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"/>
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="1" Text="{Binding Category}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding Status}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                        <TextBlock Grid.Column="3" Text="{Binding RecoveryDateText}" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+            <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="11">
+                        <Grid>
+                            <StackPanel>
+                                <TextBlock Text="Maklumat Pemulihan" Style="{StaticResource SectionTitleStyle}"/>
+                                <TextBlock x:Name="SelectedStudent" Text="Pilih satu kes di sebelah kiri" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                            <Border x:Name="StatusBadge" HorizontalAlignment="Right" VerticalAlignment="Top" Background="#F1F4F8" CornerRadius="12" Padding="12,6">
+                                <TextBlock x:Name="SelectedStatus" Text="TIADA KES" FontWeight="SemiBold" Foreground="{StaticResource NavyBrush}"/>
+                            </Border>
+                        </Grid>
+
+                        <TextBlock Text="Tarikh Dipulihkan" FontWeight="SemiBold"/>
+                        <DatePicker Style="{StaticResource CaseDatePickerStyle}" x:Name="RecoveredAt"/>
+                        <TextBlock Text="Guru Mengesahkan Pemulihan" FontWeight="SemiBold"/>
+                        <ComboBox Style="{StaticResource CaseComboBoxStyle}" x:Name="TeacherPicker" DisplayMemberPath="Nama" PlaceholderText="Pilih guru"/>
+                        <TextBox Style="{StaticResource CaseTextBoxStyle}" x:Name="Outcome" Header="Hasil Pemulihan" AcceptsReturn="True" TextWrapping="Wrap" Height="110" PlaceholderText="Contoh: Kehadiran kembali konsisten dan intervensi menunjukkan perubahan positif."/>
+
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Pemantauan Hingga" FontWeight="SemiBold"/>
+                                <DatePicker Style="{StaticResource CaseDatePickerStyle}" x:Name="MonitoringUntil"/>
+                            </StackPanel>
+                            <CheckBox x:Name="NoMonitoringDate" Grid.Column="1" Content="Tiada tarikh" VerticalAlignment="Bottom" Margin="0,0,0,7"/>
+                        </Grid>
+
+                        <TextBox Style="{StaticResource CaseTextBoxStyle}" x:Name="RecoveryNotes" Header="Catatan Pemulihan / Pemantauan" AcceptsReturn="True" TextWrapping="Wrap" Height="110"/>
+
+                        <StackPanel Orientation="Horizontal" Spacing="9">
+                            <Button Content="✓ Tandakan Dipulihkan" Style="{StaticResource SuccessButtonStyle}" Click="Recover_Click"/>
+                            <Button Content="Kembali Pemantauan" Style="{StaticResource PrimaryButtonStyle}" Click="Monitoring_Click"/>
+                            <Button Content="Segar Semula" Click="Refresh_Click"/>
+                        </StackPanel>
+                        <TextBlock x:Name="FormStatus" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

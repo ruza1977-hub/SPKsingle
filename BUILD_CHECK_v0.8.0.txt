@@ -1,0 +1,28 @@
+BUILD CHECK v0.8.0 — LAPORAN & ANALITIK MAC MATCH
+==================================================
+
+Pemeriksaan statik dalam persekitaran pembangunan:
+- 22 fail XAML: XML parse = OK
+- ReportsPage.xaml: tiada WrapPanel
+- Resource <Color> bermasalah: tiada penambahan baharu
+- Handler Filter_Changed / Refresh_Click / ExportCsv_Click / ExportPdf_Click tersedia
+- C# changed files: string/comment/bracket lexical scan = OK
+- SQL analitik diuji terus terhadap database backup Mac SPK_Backup_20260815_2310:
+  * 54 murid
+  * 54 rekod kehadiran 2026
+  * trend OGO = 100.0%
+  * 9 kelas berjaya diagregat
+  * query murid berisiko = OK
+  * query kes aktif/dipulihkan = OK
+- Database canonical Mac tidak diubah.
+- Backup/Restore/Sync Railway v0.7.2 dikekalkan.
+
+PENTING
+Persekitaran ini tidak menyediakan Visual Studio + Windows App SDK untuk compile WinUI 3 sebenar.
+Ujian akhir di Windows:
+1. Extract ZIP.
+2. Buka SPK_Windows.sln.
+3. Build > Clean Solution.
+4. Build > Rebuild Solution.
+5. Buka Laporan & Analitik.
+6. Uji penapis, CSV dan PDF.

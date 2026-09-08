@@ -1,0 +1,25 @@
+SISTEM PENGURUSAN KEHADIRAN WINDOWS v0.1.2
+
+PENTING: JANGAN extract ke folder yang panjang.
+
+Cara paling selamat:
+1. Extract ZIP ini terus ke C:\SPK
+   Hasil akhir patut seperti:
+   C:\SPK\SPK_Windows.sln
+   C:\SPK\SPK\SistemPengurusanKehadiran.csproj
+
+2. Buka C:\SPK\SPK_Windows.sln
+3. Pilih Debug | x64
+4. Klik kanan projek SPK / SistemPengurusanKehadiran -> Set as Startup Project
+5. Build -> Clean Solution
+6. Build -> Rebuild Solution
+7. Jika Build berjaya, tekan F5.
+
+Jika Visual Studio masih menggunakan cache projek lama:
+- Tutup Visual Studio
+- Padam folder .vs, SPK\bin dan SPK\obj
+- Buka semula SPK_Windows.sln
+- Rebuild
+
+v0.1.2 menggunakan WinUI 3 unpackaged framework-dependent untuk DEBUG.
+Windows App SDK runtime diperlukan pada PC pembangunan (biasanya dipasang bersama workload Visual Studio).

@@ -1,0 +1,273 @@
+<Page x:Class="SistemPengurusanKehadiran.Pages.VideoEvidencePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      RequestedTheme="Light" Background="#F7F9FC" UseLayoutRounding="True">
+
+    <!-- v0.5.7: fokus reka bentuk player + panel kanan boleh dibesar/kecil (accordion).
+         Player kekal tinggi/sempit; Stop Video di panel kanan; panel senarai dan borang boleh difokuskan bergilir. -->
+    <Grid Padding="20" ColumnSpacing="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="387"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- KIRI: PLAYER VIDEO BESAR -->
+        <Border Grid.Column="0"
+                Background="White"
+                BorderBrush="#18000000"
+                BorderThickness="1"
+                CornerRadius="18"
+                Padding="18">
+            <Grid RowSpacing="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Background="Black" CornerRadius="17" MinHeight="726">
+                    <Grid x:Name="PreviewHost" Background="Black">
+                        <WebView2 x:Name="VideoWeb"
+                                  Visibility="Collapsed"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"/>
+                        <MediaPlayerElement x:Name="LocalPlayer"
+                                            Visibility="Collapsed"
+                                            AreTransportControlsEnabled="True"
+                                            AutoPlay="False"
+                                            Stretch="UniformToFill"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"/>
+
+                        <StackPanel x:Name="PreviewEmpty"
+                                    Width="300"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Spacing="14">
+                            <Grid Width="78" Height="62" HorizontalAlignment="Center">
+                                <FontIcon Glyph="&#xE714;" FontSize="66" Foreground="#C8CDD4"
+                                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Grid>
+                            <TextBlock Text="Pilih rekod dan tekan Pratonton"
+                                       Foreground="White"
+                                       FontSize="17"
+                                       FontWeight="SemiBold"
+                                       TextAlignment="Center"/>
+                            <TextBlock Text="Player menggunakan nisbah video. Google Drive dimainkan melalui STREAM dan video cache lokal dimainkan terus dalam aplikasi."
+                                       Foreground="#BFC5CC"
+                                       FontSize="12"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- CacheStatus dikekalkan sebagai state dalaman supaya code-behind serasi,
+                     tetapi tidak dipaparkan pada UI player. -->
+                <TextBlock Grid.Row="1" x:Name="CacheStatus" Visibility="Collapsed"/>
+            </Grid>
+        </Border>
+
+        <!-- KANAN: HEADER + SENARAI + BORANG -->
+        <Grid Grid.Column="1" RowSpacing="14">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition x:Name="VideoListRow" Height="330"/>
+                <RowDefinition x:Name="VideoFormRow" Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header gaya macOS -->
+            <Grid Grid.Row="0" ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Width="48" Height="48" CornerRadius="11" Background="#2BB8C4">
+                    <FontIcon Glyph="&#xE714;" Foreground="White" FontSize="23"
+                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Text="Eviden Video" FontSize="21" FontWeight="Bold" Foreground="#15345E"/>
+                    <TextBlock Text="Google Drive utama · YouTube sekunder · metadata SQLite · cache lokal"
+                               FontSize="12" Foreground="#6B7280"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Senarai video dalam database -->
+            <Border Grid.Row="1"
+                    Background="White"
+                    BorderBrush="#18000000"
+                    BorderThickness="1"
+                    CornerRadius="18"
+                    Padding="18,14">
+                <Grid RowSpacing="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Video Dalam Database" FontSize="15" FontWeight="Bold" Foreground="#15345E"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" x:Name="CountText" Text="0"
+                                   Foreground="#2F80ED" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        <Button Grid.Column="2" x:Name="ListPanelButton" Content="Besarkan"
+                                Click="ToggleVideoListPanel_Click" Padding="10,4" MinHeight="28"
+                                Background="#F3F6FA" Foreground="#15345E" CornerRadius="8"/>
+                    </Grid>
+
+                    <Grid x:Name="VideoListBody" Grid.Row="1" RowSpacing="8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBox x:Name="SearchBox"
+                                 PlaceholderText="Cari murid / tajuk / sumber video"
+                                 TextChanged="Search_TextChanged"
+                                 MinHeight="34" FontSize="12"/>
+
+                        <ListView x:Name="List"
+                                  Grid.Row="1"
+                                  SelectionChanged="List_SelectionChanged"
+                                  BorderThickness="0"
+                                  Background="Transparent">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Margin" Value="0"/>
+                                <Setter Property="MinHeight" Value="54"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="8,7" ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="28"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="26"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <FontIcon Glyph="&#xE714;" Foreground="#2F80ED" FontSize="17"
+                                              VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+                                    <StackPanel Grid.Column="1" Spacing="1">
+                                        <TextBlock Text="{Binding Title}" FontWeight="SemiBold"
+                                                   Foreground="#1F2937" TextTrimming="CharacterEllipsis"/>
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                            <TextBlock Text="{Binding StudentName}" FontSize="11"
+                                                       Foreground="#4B5563" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Text="·" FontSize="11" Foreground="#6B7280"/>
+                                            <TextBlock Text="{Binding Kelas}" FontSize="11"
+                                                       Foreground="#4B5563" TextTrimming="CharacterEllipsis"/>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <Border Grid.Column="2" Width="16" Height="16" CornerRadius="8"
+                                            Background="#37B98B" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <TextBlock Text="✓" Foreground="White" FontSize="10" FontWeight="Bold"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <!-- Maklumat eviden video -->
+            <Border Grid.Row="2"
+                    Background="White"
+                    BorderBrush="#18000000"
+                    BorderThickness="1"
+                    CornerRadius="18"
+                    Padding="18">
+                <Grid RowSpacing="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Maklumat Eviden Video" FontSize="15" FontWeight="Bold"
+                                   Foreground="#15345E" VerticalAlignment="Center"/>
+                        <Border Grid.Column="1" Background="#EAF8F2" CornerRadius="12" Padding="12,5"
+                                VerticalAlignment="Center">
+                            <TextBlock Text="●  AutoSave" Foreground="#299C78" FontSize="11" FontWeight="SemiBold"/>
+                        </Border>
+                        <Button Grid.Column="2" x:Name="FormPanelButton" Content="Besarkan"
+                                Click="ToggleVideoFormPanel_Click" Padding="10,4" MinHeight="28"
+                                Background="#F3F6FA" Foreground="#15345E" CornerRadius="8"/>
+                    </Grid>
+
+                    <ScrollViewer x:Name="VideoFormBody" Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Spacing="10">
+
+                        <ComboBox x:Name="StudentPicker"
+                                  Header="Nama Pelajar"
+                                  PlaceholderText="PILIH MURID"
+                                  DisplayMemberPath="Display"
+                                  SelectionChanged="FormChanged"/>
+
+                        <Grid ColumnSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="170"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <DatePicker x:Name="EvidenceDate" Header="Tarikh" DateChanged="DateChanged"/>
+                            <Border Grid.Column="1" Margin="0,23,0,0" Background="#F3F3F3" CornerRadius="8" Padding="12,9">
+                                <StackPanel>
+                                    <TextBlock Text="Kategori / Sumber" FontSize="10" Foreground="#6B7280"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <TextBlock x:Name="ProviderText" Text="Pautan Tidak Dikenali" FontWeight="SemiBold"/>
+                                        <TextBlock x:Name="SourceIdText" Foreground="#6B7280" FontSize="11" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
+                        <TextBox x:Name="TitleBox" Header="Tajuk" PlaceholderText="Tajuk video"
+                                 TextChanged="FormTextChanged"/>
+                        <TextBox x:Name="UrlBox" Header="Pautan"
+                                 PlaceholderText="https://drive.google.com/... atau YouTube"
+                                 TextChanged="Url_TextChanged" TextWrapping="Wrap"/>
+
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button Content="🔎  Carian" Click="SearchFocus_Click"
+                                    Background="#2F80ED" Foreground="White" CornerRadius="8" Padding="14,8"/>
+                            <Button Content="＋  Tambah" Click="New_Click"
+                                    Background="#37B98B" Foreground="White" CornerRadius="8" Padding="14,8"/>
+                            <Button Content="▶  Main" Click="Preview_Click"
+                                    Background="#F6D9A6" Foreground="#8B5E21" CornerRadius="8" Padding="14,8"/>
+                            <Button Content="■  Stop Video" Click="StopVideo_Click"
+                                    Background="#F3F4F6" Foreground="#374151" CornerRadius="8" Padding="14,8"/>
+                        </StackPanel>
+
+                        <TextBox x:Name="NotesBox" Header="Catatan" AcceptsReturn="True"
+                                 Height="82" TextWrapping="Wrap" TextChanged="FormTextChanged"/>
+
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button Content="Simpan" Style="{StaticResource PrimaryButtonStyle}" Click="Save_Click"/>
+                            <Button Content="Cache Video Lokal" Click="CacheVideo_Click"/>
+                            <Button Content="Padam" Style="{StaticResource DangerButtonStyle}" Click="Delete_Click"/>
+                        </StackPanel>
+
+                        <TextBlock x:Name="FormStatus" Foreground="#6B7280" FontSize="12" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

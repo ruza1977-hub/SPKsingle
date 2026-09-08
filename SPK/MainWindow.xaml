@@ -1,0 +1,89 @@
+<Window
+    x:Class="SistemPengurusanKehadiran.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Sistem Pengurusan Kehadiran">
+
+    <Grid Background="#F7F9FC" RequestedTheme="Light" UseLayoutRounding="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="304"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Bar atas seperti versi macOS -->
+        <Border Grid.Row="0" Grid.Column="0" Background="#F8FAFC" BorderBrush="#12000000" BorderThickness="0,0,1,1">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Spacing="10" Margin="0,0,14,0">
+                <Button Width="36" Height="34" CornerRadius="17" Padding="0" Background="White">
+                    <FontIcon Glyph="&#xE700;" FontSize="15" Foreground="#3F4650"/>
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="0" Grid.Column="1" Background="White" BorderBrush="#12000000" BorderThickness="0,0,0,1">
+            <Grid Margin="14,0,14,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="10">
+                    <Border Width="36" Height="36" Background="White" CornerRadius="18" Padding="3">
+                        <Image x:Name="TopSchoolLogo" Stretch="Uniform"/>
+                    </Border>
+                    <TextBlock Text="Sistem Pengurusan Kehadiran" FontWeight="SemiBold" FontSize="15"
+                               Foreground="#3B3F45" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Border HorizontalAlignment="Right" VerticalAlignment="Center" Background="#EAF7F2" CornerRadius="14" Padding="12,6">
+                    <StackPanel Orientation="Horizontal" Spacing="7">
+                        <Border Width="8" Height="8" CornerRadius="4" Background="#39B990" VerticalAlignment="Center"/>
+                        <TextBlock Text="SQLite Local" FontSize="11" FontWeight="SemiBold" Foreground="#466159"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- NavigationView dikunci terbuka supaya rupa Windows sepadan dengan sidebar Mac. -->
+        <NavigationView x:Name="Nav"
+                        Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                        PaneDisplayMode="Left"
+                        IsPaneOpen="True"
+                        IsPaneToggleButtonVisible="False"
+                        IsBackButtonVisible="Collapsed"
+                        IsSettingsVisible="False"
+                        OpenPaneLength="304"
+                        CompactPaneLength="0"
+                        SelectionChanged="Nav_SelectionChanged">
+            <NavigationView.Resources>
+                <SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="#173D68"/>
+            </NavigationView.Resources>
+
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Dashboard" Tag="dashboard" Icon="Home" Foreground="White" Background="#254F7E" Margin="12,5"/>
+                <NavigationViewItem Content="Import ZIP Data" Tag="import" Icon="Download" Foreground="White" Background="#254F7E" Margin="12,5"/>
+                <NavigationViewItem Content="Murid" Tag="students" Icon="People" Foreground="White" Background="#254F7E" Margin="12,5"/>
+                <NavigationViewItem Content="Guru" Tag="teachers" Icon="Contact" Foreground="White" Background="#254F7E" Margin="12,5"/>
+                <NavigationViewItem Content="Takwim" Tag="calendar" Icon="Calendar" Foreground="White" Background="#254F7E" Margin="12,5"/>
+                <NavigationViewItem Content="Kehadiran" Tag="attendance" Icon="Accept" Foreground="White" Background="#254F7E" Margin="12,5"/>
+                <NavigationViewItem Content="Laporan &amp; Analitik" Tag="reports" Icon="AllApps" Foreground="White" Background="#254F7E" Margin="12,5"/>
+
+                <NavigationViewItemHeader Content="MODUL KES" Foreground="#B8C8DA"/>
+                <NavigationViewItem Content="Profil Kes" Tag="cases" Icon="Folder" Foreground="White" Background="#254F7E" Margin="12,5"/>
+                <NavigationViewItem Content="Hubungan Penjaga" Tag="contacts" Icon="Phone" Foreground="White" Background="#254F7E" Margin="12,5"/>
+                <NavigationViewItem Content="Lawatan Rumah" Tag="visits" Icon="Map" Foreground="White" Background="#254F7E" Margin="12,5"/>
+                <NavigationViewItem Content="Kaunseling" Tag="counselling" Icon="Message" Foreground="White" Background="#254F7E" Margin="12,5"/>
+                <NavigationViewItem Content="Intervensi" Tag="interventions" Icon="Repair" Foreground="White" Background="#254F7E" Margin="12,5"/>
+                <NavigationViewItem Content="Surat Amaran" Tag="letters" Icon="Document" Foreground="White" Background="#254F7E" Margin="12,5"/>
+                <NavigationViewItem Content="Evidens" Tag="evidence" Icon="Attach" Foreground="White" Background="#254F7E" Margin="12,5"/>
+                <NavigationViewItem Content="Eviden Video" Tag="videos" Icon="Video" Foreground="White" Background="#254F7E" Margin="12,5"/>
+                <NavigationViewItem Content="Dipulihkan" Tag="recovery" Icon="Favorite" Foreground="White" Background="#254F7E" Margin="12,5"/>
+
+                <NavigationViewItemHeader Content="SISTEM" Foreground="#B8C8DA"/>
+                <NavigationViewItem Content="Sambungkan Peranti" Tag="provision" Icon="Link" Foreground="White" Background="#254F7E" Margin="12,5"/>
+                <NavigationViewItem Content="Sync Railway" Tag="sync" Icon="Sync" Foreground="White" Background="#254F7E" Margin="12,5"/>
+                <NavigationViewItem Content="Backup / Restore" Tag="backup" Icon="Save" Foreground="White" Background="#254F7E" Margin="12,5"/>
+                <NavigationViewItem Content="Tetapan" Tag="settings" Icon="Setting" Foreground="White" Background="#254F7E" Margin="12,5"/>
+            </NavigationView.MenuItems>
+
+            <Frame x:Name="ContentFrame" Background="#F7F9FC" RequestedTheme="Light" UseLayoutRounding="True"/>
+        </NavigationView>
+    </Grid>
+</Window>

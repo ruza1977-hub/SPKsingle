@@ -1,0 +1,10 @@
+AUTO SERVER CONFIG v0.7.2
+
+Pilihan tanpa butang:
+1. Namakan pakej server sebenar sebagai: server_config.zip
+2. Letakkan fail itu dalam folder SPK/Config sebelum Build.
+3. Projek akan menyalinnya ke output dan aplikasi akan import sekali secara automatik.
+4. Selepas config disimpan, token dilindungi dengan Windows DPAPI.
+5. Aplikasi akan terus boleh Sync dan Auto Sync boleh berjalan tanpa import semula.
+
+JANGAN gunakan SERVER_CONFIG_TEMPLATE_v1.zip tanpa menggantikan base_url, school_id dan token sebenar.

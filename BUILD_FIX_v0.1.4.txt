@@ -1,0 +1,12 @@
+SPK Windows v0.1.4
+
+Pembaikan:
+- RailwaySyncService.cs: buang kurungan '}' berlebihan dalam ReadPending().
+- Fail sync diformat semula supaya mudah diselenggara.
+
+Ujian di Windows:
+1. Extract ke C:\SPK014
+2. Buka SPK_Windows.sln
+3. Build > Clean Solution
+4. Build > Rebuild Solution
+5. Pastikan Build succeeded sebelum F5.

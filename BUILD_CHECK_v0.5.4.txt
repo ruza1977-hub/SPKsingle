@@ -1,0 +1,8 @@
+BUILD CHECK v0.5.4
+
+- Pembaikan compile Restore: `entry ??= throw` dibuang.
+- Ganti dengan `if (entry is null) throw new InvalidDataException(...)`.
+- Canonical Mac database kekal: database/sistem_pengurusan_kehadiran.sqlite3
+- Fallback legacy Windows database/spk.sqlite3 masih dibaca untuk migrasi sahaja.
+- Tiada penggunaan `??= throw` tinggal dalam source.
+- Ujian build WinUI sebenar masih perlu dibuat di Visual Studio Windows.

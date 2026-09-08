@@ -1,0 +1,41 @@
+<Page x:Class="SistemPengurusanKehadiran.Pages.ImportDataPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" RequestedTheme="Light" Background="#F8FAFD" UseLayoutRounding="True">
+    <ScrollViewer>
+        <StackPanel Padding="28" Spacing="18">
+            <StackPanel Orientation="Horizontal" Spacing="15">
+                <Border Width="62" Height="62" CornerRadius="18" Background="{StaticResource PurpleBrush}">
+                    <FontIcon Glyph="&#xE896;" Foreground="White" FontSize="27" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Import ZIP Data" Style="{StaticResource PageTitleStyle}"/>
+                    <TextBlock Text="Satu pakej untuk Murid, Takwim dan Kehadiran" Foreground="{StaticResource TextSecondaryBrush}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="2*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                <Border Style="{StaticResource CardBorderStyle}">
+                    <StackPanel Spacing="16">
+                        <TextBlock Text="Fail Ponteng Import Package v1" Style="{StaticResource SectionTitleStyle}"/>
+                        <TextBlock Text="Aplikasi menyemak manifest, kemudian import mengikut turutan Murid → Takwim → Kehadiran. Rekod sedia ada akan dikemas kini berdasarkan kunci yang sama." TextWrapping="Wrap" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <Button Content="Pilih ZIP &amp; Import" Style="{StaticResource PurpleButtonStyle}" Click="Import_Click" HorizontalAlignment="Left"/>
+                        <Border x:Name="StatusCard" Background="#F3F6FA" CornerRadius="14" Padding="15">
+                            <TextBlock x:Name="Status" Text="Belum ada ZIP diimport." FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{StaticResource TextPrimaryBrush}"/>
+                        </Border>
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource SoftCardBorderStyle}">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Struktur Disokong" Style="{StaticResource SectionTitleStyle}"/>
+                        <TextBlock Text="✓ manifest.json" Foreground="{StaticResource MintBrush}" FontWeight="SemiBold"/>
+                        <TextBlock Text="✓ murid/murid.csv" Foreground="{StaticResource BlueBrush}"/>
+                        <TextBlock Text="✓ takwim/takwim.csv" Foreground="{StaticResource PurpleBrush}"/>
+                        <TextBlock Text="✓ kehadiran/*.csv" Foreground="{StaticResource CoralBrush}"/>
+                        <TextBlock Text="✓ validation.json (jika ada)" Foreground="{StaticResource TextSecondaryBrush}"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

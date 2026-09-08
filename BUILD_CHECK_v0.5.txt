@@ -1,0 +1,13 @@
+BUILD CHECK v0.5.0
+==================
+
+Pemeriksaan statik sebelum ZIP:
+- Semua 21 fail XAML berjaya diparse sebagai XML.
+- 0 penggunaan <WrapPanel>.
+- 0 resource <Color ...> yang menyebabkan warning designer sebelumnya.
+- Semua event handler XAML mempunyai method code-behind sepadan.
+- Kurungan { } fail C# seimbang.
+- Microsoft.WindowsAppSDK kekal 1.8.260710003.
+
+Nota:
+Build WinUI 3 sebenar perlu dijalankan pada Windows/Visual Studio kerana persekitaran pembinaan semasa bukan Windows dan tidak mempunyai toolchain WinUI/MSBuild.

@@ -1,0 +1,104 @@
+<Page x:Class="SistemPengurusanKehadiran.Pages.EvidencePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      RequestedTheme="Light" Background="#F8FAFD" UseLayoutRounding="True">
+    <Grid Padding="28" RowSpacing="16">
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/></Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <StackPanel Orientation="Horizontal" Spacing="14">
+                <Border Width="58" Height="58" CornerRadius="17" Background="{StaticResource PurpleBrush}">
+                    <FontIcon Glyph="&#xE723;" Foreground="White" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Evidens" Style="{StaticResource PageTitleStyle}"/>
+                    <TextBlock Text="Gambar dan PDF disimpan terus dalam SQLite" Foreground="{StaticResource TextSecondaryBrush}"/>
+                </StackPanel>
+            </StackPanel>
+            <Border HorizontalAlignment="Right" Background="#F1ECFF" CornerRadius="14" Padding="15,8">
+                <TextBlock x:Name="CountText" Text="0 EVIDENS" Foreground="{StaticResource PurpleBrush}" FontWeight="Bold"/>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="1" ColumnSpacing="18">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="420"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+
+            <Border Style="{StaticResource CardBorderStyle}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Rekod Evidens" Style="{StaticResource SectionTitleStyle}"/>
+                        <ComboBox x:Name="StudentPicker" Header="Murid" DisplayMemberPath="Display"/>
+                        <DatePicker x:Name="EvidenceDate" Header="Tarikh Evidens"/>
+                        <ComboBox x:Name="EvidenceType" Header="Jenis Evidens" SelectedIndex="0">
+                            <x:String>GAMBAR</x:String><x:String>DOKUMEN</x:String><x:String>SURAT</x:String><x:String>LAWATAN RUMAH</x:String><x:String>KAUNSELING</x:String><x:String>LAIN-LAIN</x:String>
+                        </ComboBox>
+                        <TextBox x:Name="TitleBox" Header="Tajuk" PlaceholderText="Contoh: Gambar lawatan rumah"/>
+                        <Button Content="Pilih Gambar / PDF" Style="{StaticResource PurpleButtonStyle}" Click="PickFile_Click"/>
+                        <Border Background="#F5F7FB" CornerRadius="10" Padding="12">
+                            <StackPanel Spacing="4">
+                                <TextBlock x:Name="SelectedFileText" Text="Belum ada fail dipilih" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                <TextBlock x:Name="SelectedFileSizeText" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+                        <TextBox x:Name="NotesBox" Header="Catatan" AcceptsReturn="True" Height="100" TextWrapping="Wrap"/>
+                        <StackPanel Orientation="Horizontal" Spacing="9">
+                            <Button Content="＋ Baharu" Click="New_Click"/>
+                            <Button Content="Simpan" Style="{StaticResource PrimaryButtonStyle}" Click="Save_Click"/>
+                            <Button Content="Padam" Style="{StaticResource DangerButtonStyle}" Click="Delete_Click"/>
+                        </StackPanel>
+                        <TextBlock x:Name="FormStatus" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <Grid Grid.Column="1" RowSpacing="12">
+                <Grid.RowDefinitions><RowDefinition Height="330"/><RowDefinition Height="Auto"/><RowDefinition/></Grid.RowDefinitions>
+                <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}" Padding="0">
+                    <Grid Background="#EEF2F7">
+                        <Image x:Name="PreviewImage" Stretch="Uniform" Visibility="Collapsed" Margin="12"/>
+                        <WebView2 x:Name="PreviewWeb" Visibility="Collapsed"/>
+                        <StackPanel x:Name="PreviewEmpty" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="9">
+                            <FontIcon Glyph="&#xE8B9;" FontSize="54" Foreground="#8EA0B5"/>
+                            <TextBlock Text="Pilih rekod untuk pratonton" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Grid Grid.Row="1" ColumnSpacing="10">
+                    <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                    <TextBox x:Name="SearchBox" PlaceholderText="Cari murid / tajuk / fail evidens" TextChanged="Search_TextChanged"/>
+                    <Button Grid.Column="1" Content="Eksport Fail" Style="{StaticResource SuccessButtonStyle}" Click="Export_Click"/>
+                </Grid>
+
+                <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}" Padding="0">
+                    <Grid>
+                        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/></Grid.RowDefinitions>
+                        <Grid Background="#F2F6FC" Padding="16,11" ColumnSpacing="12">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="150"/><ColumnDefinition Width="110"/><ColumnDefinition Width="120"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="MURID / TAJUK" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Grid.Column="1" Text="JENIS" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Grid.Column="2" Text="TARIKH" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Grid.Column="3" Text="SAIZ" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        </Grid>
+                        <ListView x:Name="List" Grid.Row="1" SelectionChanged="List_SelectionChanged">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Padding="12,9" ColumnSpacing="12">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="150"/><ColumnDefinition Width="110"/><ColumnDefinition Width="120"/></Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding StudentName}" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                            <TextBlock Text="{Binding DisplayTitle}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" TextTrimming="CharacterEllipsis"/>
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="1" Text="{Binding EvidenceType}" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding DateText}" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="3" Text="{Binding FileSizeText}" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

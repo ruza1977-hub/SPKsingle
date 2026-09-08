@@ -1,0 +1,59 @@
+<Page x:Class="SistemPengurusanKehadiran.Pages.DashboardPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" RequestedTheme="Light" Background="#F8FAFD" UseLayoutRounding="True">
+    <ScrollViewer>
+        <StackPanel Spacing="18" Padding="28">
+            <Grid>
+                <StackPanel Orientation="Horizontal" Spacing="16">
+                    <Border Width="66" Height="66" CornerRadius="19" Background="White" BorderBrush="#18000000" BorderThickness="1" Padding="5">
+                        <Image x:Name="DashboardSchoolLogo" Stretch="Uniform"/>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Dashboard" Style="{StaticResource PageTitleStyle}"/>
+                        <TextBlock x:Name="IdentityText" Text="SPK Desktop" Foreground="{StaticResource TextSecondaryBrush}"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Spacing="5">
+                    <Border x:Name="ConnectionBadge" Background="#EAF7F2" CornerRadius="14" Padding="12,6">
+                        <TextBlock x:Name="ConnectionText" Text="Diselaraskan" FontSize="12" FontWeight="SemiBold" Foreground="#276B59"/>
+                    </Border>
+                    <TextBlock x:Name="LastSyncText" Text="Belum sync" FontSize="11" Foreground="#7B8794" HorizontalAlignment="Right"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid ColumnSpacing="14" RowSpacing="14">
+                <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                <Grid.RowDefinitions><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
+                <Border Style="{StaticResource CardBorderStyle}" Grid.Column="0"><StackPanel><TextBlock Text="Murid Aktif" Foreground="{StaticResource TextSecondaryBrush}"/><TextBlock x:Name="StudentsText" Text="0" FontSize="36" FontWeight="Bold" Foreground="{StaticResource BlueBrush}"/></StackPanel></Border>
+                <Border Style="{StaticResource CardBorderStyle}" Grid.Column="1"><StackPanel><TextBlock Text="Guru Aktif" Foreground="{StaticResource TextSecondaryBrush}"/><TextBlock x:Name="TeachersText" Text="0" FontSize="36" FontWeight="Bold" Foreground="{StaticResource PurpleBrush}"/></StackPanel></Border>
+                <Border Style="{StaticResource CardBorderStyle}" Grid.Column="2"><StackPanel><TextBlock Text="Hari Sekolah" Foreground="{StaticResource TextSecondaryBrush}"/><TextBlock x:Name="SchoolDaysText" Text="0" FontSize="36" FontWeight="Bold" Foreground="{StaticResource NavyBrush}"/></StackPanel></Border>
+                <Border Style="{StaticResource CardBorderStyle}" Grid.Row="1" Grid.Column="0"><StackPanel><TextBlock Text="Hadir Hari Ini" Foreground="{StaticResource TextSecondaryBrush}"/><TextBlock x:Name="HadirText" Text="0" FontSize="36" FontWeight="Bold" Foreground="{StaticResource MintBrush}"/></StackPanel></Border>
+                <Border Style="{StaticResource CardBorderStyle}" Grid.Row="1" Grid.Column="1"><StackPanel><TextBlock Text="Tidak Hadir" Foreground="{StaticResource TextSecondaryBrush}"/><TextBlock x:Name="AbsentText" Text="0" FontSize="36" FontWeight="Bold" Foreground="{StaticResource CoralBrush}"/></StackPanel></Border>
+                <Border Style="{StaticResource CardBorderStyle}" Grid.Row="1" Grid.Column="2"><StackPanel><TextBlock Text="Menunggu Sync" Foreground="{StaticResource TextSecondaryBrush}"/><TextBlock x:Name="SyncText" Text="0" FontSize="36" FontWeight="Bold" Foreground="{StaticResource AmberBrush}"/></StackPanel></Border>
+            </Grid>
+
+            <Border Style="{StaticResource CardBorderStyle}">
+                <Grid ColumnSpacing="20">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="2*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Tindakan Pantas" Style="{StaticResource SectionTitleStyle}"/>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Button Content="Isi Kehadiran" Click="Attendance_Click" Style="{StaticResource PrimaryButtonStyle}"/>
+                            <Button Content="Hubungan Penjaga" Click="Guardian_Click"/>
+                            <Button Content="Tambah Eviden" Click="Evidence_Click"/>
+                            <Button x:Name="SyncNowButton" Content="Sync Sekarang" Click="SyncNow_Click"/>
+                        </StackPanel>
+                        <TextBlock x:Name="CaseText" Foreground="{StaticResource TextPrimaryBrush}"/>
+                    </StackPanel>
+                    <Border Grid.Column="1" Background="#ECF8F4" CornerRadius="14" Padding="16">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Peranti Ini" FontWeight="SemiBold" Foreground="{StaticResource NavyBrush}"/>
+                            <TextBlock x:Name="DeviceText" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                            <TextBlock Text="Credential dilindungi oleh Windows DPAPI." FontSize="11" Foreground="#7B8794" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>
