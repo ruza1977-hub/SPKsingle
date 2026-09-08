@@ -23,8 +23,9 @@
     <!-- Carry the Windows App SDK runtime with the debug output. -->
     <SelfContained>true</SelfContained>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <WindowsAppSdkUndockedRegFreeWinRTInitialize>true</WindowsAppSdkUndockedRegFreeWinRTInitialize>
 
-    <!-- Required for WinUI 3 single-file publish -->
+    <!-- GitHub Release: single-file self-contained Windows x64 -->
     <PublishSingleFile>true</PublishSingleFile>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
