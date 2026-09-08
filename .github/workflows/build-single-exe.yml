@@ -1,0 +1,116 @@
+name: Build SPK Windows v1.1.1 Single EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Locate SPK project
+        id: locate
+        shell: pwsh
+        run: |
+          $project = Get-ChildItem -Path . -Recurse -Filter *.csproj |
+            Where-Object {
+              $_.FullName -notmatch "\\obj\\" -and
+              $_.FullName -notmatch "\\bin\\"
+            } |
+            Select-Object -First 1
+
+          if (-not $project) {
+            Write-Error "Fail .csproj tidak ditemui."
+            exit 1
+          }
+
+          Write-Host "Project ditemui:"
+          Write-Host $project.FullName
+
+          "project=$($project.FullName)" >> $env:GITHUB_OUTPUT
+
+      - name: Restore
+        shell: pwsh
+        run: |
+          dotnet restore "${{ steps.locate.outputs.project }}"
+
+      - name: Publish SPK Windows x64
+        shell: pwsh
+        run: |
+          dotnet publish "${{ steps.locate.outputs.project }}" `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:EnableCompressionInSingleFile=true `
+            -p:DebugType=None `
+            -p:DebugSymbols=false `
+            -p:Version=1.1.1 `
+            -p:FileVersion=1.1.1.0 `
+            -p:AssemblyVersion=1.1.1.0 `
+            -o ".\publish"
+
+      - name: Show publish files
+        shell: pwsh
+        run: |
+          Write-Host "===== FILE PUBLISH ====="
+          Get-ChildItem ".\publish" -Recurse |
+            Select-Object FullName, Length
+
+      - name: Find main EXE
+        id: exe
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem ".\publish" -Filter *.exe |
+            Where-Object {
+              $_.Name -notmatch "createdump"
+            } |
+            Sort-Object Length -Descending |
+            Select-Object -First 1
+
+          if (-not $exe) {
+            Write-Error "EXE utama tidak ditemui."
+            exit 1
+          }
+
+          Write-Host "EXE utama:"
+          Write-Host $exe.FullName
+
+          Copy-Item $exe.FullName ".\publish\SPK_Windows_v1.1.1_x64.exe" -Force
+
+      - name: Prepare distribution
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path ".\dist"
+
+          Copy-Item `
+            ".\publish\SPK_Windows_v1.1.1_x64.exe" `
+            ".\dist\SPK_Windows_v1.1.1_x64.exe"
+
+          if (Test-Path ".\publish\Assets") {
+            Copy-Item ".\publish\Assets" ".\dist\Assets" -Recurse -Force
+          }
+
+          if (Test-Path ".\publish\Config") {
+            Copy-Item ".\publish\Config" ".\dist\Config" -Recurse -Force
+          }
+
+      - name: Upload SPK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SPK-Windows-v1.1.1-SingleEXE-x64
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
